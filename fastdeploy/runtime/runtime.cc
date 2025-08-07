@@ -173,7 +173,6 @@ bool Runtime::Init(const RuntimeOption& _option) {
             << option.backend << " is not supported now." << std::endl;
     return false;
   }
-  backend_->benchmark_option_ = option.benchmark_option;
   return true;
 }
 

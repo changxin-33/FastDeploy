@@ -31,9 +31,10 @@ add_library(FastDeploy_Core OBJECT
     fastdeploy/core/fd_tensor.cc
     fastdeploy/core/fd_type.cc
     fastdeploy/fastdeploy_model.cc
-    fastdeploy/runtime.cc
+    fastdeploy/runtime/runtime.cc
+    fastdeploy/runtime/runtime_option.cc
+    fastdeploy/runtime/enum_variables.cc
     fastdeploy/utils/utils.cc
-    fastdeploy/backends/common/multiclass_nms.cc
 )
 target_compile_definitions(FastDeploy_Core PRIVATE ENABLE_ORT_BACKEND)
 target_include_directories(FastDeploy_Core PUBLIC 
@@ -43,14 +44,14 @@ target_include_directories(FastDeploy_Core PUBLIC
 target_link_libraries(FastDeploy_Core PRIVATE onnxruntime::onnxruntime)
 
 set(BACKEND_ONNXRUNTIME_SRC
-    fastdeploy/backends/ort/ops/adaptive_pool2d.cc
-    fastdeploy/backends/ort/ops/multiclass_nms.cc
-    fastdeploy/backends/ort/ort_backend.cc
-    fastdeploy/backends/ort/utils.cc
+    fastdeploy/runtime/backends/ort/ops/adaptive_pool2d.cc
+    fastdeploy/runtime/backends/ort/ops/multiclass_nms.cc
+    fastdeploy/runtime/backends/ort/ort_backend.cc
+    fastdeploy/runtime/backends/ort/utils.cc
 )
 if(WITH_CUDA)
     list(APPEND BACKEND_ONNXRUNTIME_SRC
-        fastdeploy/backends/op_cuda_kernels/adaptive_pool2d_kernel.cu
+        fastdeploy/runtime/backends/common/cuda/adaptive_pool2d_kernel.cu
     )
 endif()
 add_library(FastDeploy_Backend_ONNXRuntime OBJECT ${BACKEND_ONNXRUNTIME_SRC})
@@ -114,7 +115,9 @@ set(VISION_COMMON_SRC
     fastdeploy/vision/common/processors/hwc2chw.cc
     fastdeploy/vision/common/processors/limit_by_stride.cc
     fastdeploy/vision/common/processors/limit_short.cc
+    fastdeploy/vision/common/processors/manager.cc
     fastdeploy/vision/common/processors/mat.cc
+    fastdeploy/vision/common/processors/mat_batch.cc
     fastdeploy/vision/common/processors/normalize.cc
     fastdeploy/vision/common/processors/normalize_and_permute.cc
     fastdeploy/vision/common/processors/pad.cc
@@ -162,13 +165,14 @@ set_target_properties(FastDeploy_Core FastDeploy_Vision_OCR FastDeploy_Backend_O
 
 # https://gitlab.kitware.com/cmake/cmake/-/issues/18090
 # https://gitlab.kitware.com/cmake/cmake/-/issues/18935
-add_library(fastdeploy_ppocr
+add_library(fastdeploy_ppocr SHARED
     $<TARGET_OBJECTS:FastDeploy_Vision_OCR>
     $<TARGET_OBJECTS:FastDeploy_Vision_Common>
     $<TARGET_OBJECTS:FastDeploy_Core>
     $<TARGET_OBJECTS:FastDeploy_Backend_ONNXRuntime>
     $<TARGET_OBJECTS:FastDeploy_TensorFunction>
 )
+
 set_target_properties(
     fastdeploy_ppocr
     FastDeploy_Core

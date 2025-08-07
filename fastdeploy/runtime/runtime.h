@@ -102,11 +102,6 @@ struct FASTDEPLOY_DECL Runtime {
    * \return true if compile successed, otherwise false
    */
   bool Compile(std::vector<std::vector<FDTensor>>& prewarm_tensors);
-  /** \brief Get profile time of Runtime after the profile process is done.
-   */
-  double GetProfileTime() {
-    return backend_->benchmark_result_.time_of_runtime;
-  }
 
   bool Initialized() const { return backend_->Initialized(); }
 
