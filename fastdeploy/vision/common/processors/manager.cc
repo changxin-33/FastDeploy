@@ -16,11 +16,11 @@
 namespace fastdeploy {
 namespace vision {
 
-ProcessorManager::~ProcessorManager() {
 #ifdef WITH_GPU
+ProcessorManager::~ProcessorManager() {
   if (stream_) cudaStreamDestroy(stream_);
-#endif
 }
+#endif
 
 void ProcessorManager::UseCuda(bool enable_cv_cuda, int gpu_id) {
 #ifdef WITH_GPU

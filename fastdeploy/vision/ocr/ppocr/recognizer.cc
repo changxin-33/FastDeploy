@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include "fastdeploy/vision/ocr/ppocr/recognizer.h"
-
 #include "fastdeploy/utils/perf.h"
 #include "fastdeploy/vision/ocr/ppocr/utils/ocr_utils.h"
 
@@ -33,13 +32,8 @@ Recognizer::Recognizer(const std::string& model_file,
     valid_cpu_backends = {Backend::ORT, Backend::OPENVINO};
     valid_gpu_backends = {Backend::ORT, Backend::TRT};
   } else {
-    valid_cpu_backends = {Backend::PDINFER, Backend::ORT, Backend::OPENVINO,
-                          Backend::LITE};
+    valid_cpu_backends = {Backend::PDINFER, Backend::ORT, Backend::OPENVINO, Backend::LITE};
     valid_gpu_backends = {Backend::PDINFER, Backend::ORT, Backend::TRT};
-    valid_kunlunxin_backends = {Backend::LITE};
-    valid_ascend_backends = {Backend::LITE};
-    valid_sophgonpu_backends = {Backend::SOPHGOTPU};
-    valid_rknpu_backends = {Backend::RKNPU2};
   }
 
   runtime_option = custom_option;

@@ -46,8 +46,10 @@ struct FASTDEPLOY_DECL RuntimeOption {
    * \param[in] params_buffer The string of parameters memory buffer
    * \param[in] format Format of the loaded model
    */
-  void SetModelBuffer(const std::string& model_buffer,
-                      const std::string& params_buffer = "",
+  void SetModelBuffer(const char * model_buffer,
+                      size_t model_buffer_size,
+                      const char * params_buffer,
+                      size_t params_buffer_size,
                       const ModelFormat& format = ModelFormat::PADDLE);
 
   /** \brief When loading encrypted model, encryption_key is required to decrypte model
@@ -113,6 +115,20 @@ struct FASTDEPLOY_DECL RuntimeOption {
   bool enable_pinned_memory = false;
 
   void SetOrtGraphOptLevel(int level = -1);
+
+    // ======Only for ORT Backend========
+  // -1 means use default value by ort
+  // 0: ORT_DISABLE_ALL 1: ORT_ENABLE_BASIC 2: ORT_ENABLE_EXTENDED 3:
+  // ORT_ENABLE_ALL
+  int ort_graph_opt_level = -1;
+  int ort_inter_op_num_threads = -1;
+  // 0: ORT_SEQUENTIAL 1: ORT_PARALLEL
+  int ort_execution_mode = -1;
+
+  std::string model_buffer_ = "";
+  std::string params_buffer_ = "";
+  size_t model_buffer_size_ = 0;
+  size_t params_buffer_size_ = 0;
 };
 
 }  // namespace fastdeploy
